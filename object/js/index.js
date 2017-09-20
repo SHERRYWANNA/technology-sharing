@@ -52,6 +52,13 @@ var cursor = {
 }
 
 {
+	var key = {
+		tab: 9,
+		ctrl: 13,
+		shift: 16,
+		bracket_braces_l: 219,
+		bracket_braces_r: 221
+	};
 	cursor.init();
 	var tab = 0,
 		ctrl = false,
