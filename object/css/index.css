@@ -80,6 +80,18 @@ body, html {
 	border-radius: 4px;
 }
 
+.run {
+	background-color: #cf3f25;
+	width: 3em;
+	text-align: center;
+	display: block;
+	height: 2em;
+	line-height: 2em;
+	font-size: 16px;
+	margin-top: -2em;
+	float: right;
+	color: #fff;
+}
 
 .main {
 	margin-left: 20%;

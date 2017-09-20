@@ -54,8 +54,10 @@ var cursor = {
 {
 	var key = {
 		tab: 9,
-		ctrl: 13,
+		enter: 13,
 		shift: 16,
+		ctrl: 17,
+		comma:188,
 		bracket_braces_l: 219,
 		bracket_braces_r: 221
 	};
@@ -67,15 +69,16 @@ var cursor = {
 		var _event = e || event,
 			keyCode = _event.keyCode;
 
+		console.log(keyCode);
 		var _ctrl = 0,
 			_shift = 0;
 		switch(keyCode) {
-			case 9: 
+			case key.tab: 
 				_event.preventDefault();
 				cursor.setCursortPosition('    ');
 				tab++;
 				break;
-			case 13:
+			case key.enter:
 				_event.preventDefault();
 				if (ctrl) {
 					run();
@@ -86,19 +89,19 @@ var cursor = {
 					}
 				}
 				break;
-			case 16:
+			case key.shift:
 				shift = true;
 				_shift = setTimeout(clearShift, 5e2);
 				break;
-			case 17:
+			case key.ctrl:
 				ctrl = true;
 				_ctrl = setTimeout(clearCtrl, 5e2);
 				break;
-			case 219:
+			case key.bracket_braces_l:
 				if (shift) 
 				tab++;
 				break;
-			case 221:
+			case key.bracket_braces_r:
 				if (shift) 
 				tab--;
 				break;
@@ -121,6 +124,10 @@ var cursor = {
 		}
 	});
 
+	query('.run')[0].addEventListener('click', function() {
+		run();
+	});
+
 	function run() {
 		var _content = query('.content')[0].innerHTML.replace(/console\.log/g, 'query(".console")[0].append');
 		query('.myscript')[0].innerHTML = _content;
@@ -139,28 +146,46 @@ function query(e, fa) {
 }
 function fomate(e) {
 	var _tab = 0;
-	e = e.replace(/	/g, '');
+	e = e.replace(/[	|\n]/g, '');
 	var _trueContent = '';
 	for (var i = 0; i < e.length; i++) {
 		var _addContent = '';
 		switch (e[i]) {
 			case '{':
 				_tab++;
-				if (e[i+1] != '}') {
-					_addContent += '\n' + addTab(_tab);
+				_addContent += e[i];
+				if (e[i+1] && e[i+1] != '}') {
+					_addContent +=  '\n' + addTab(_tab);
 				}
 				break;
 			case '}':
 				_tab--;
-				if (e[i+1] != ';') {
+				if (e[i-1] && e[i-1] != ';' && e[i-1] != '{') {
+					_addContent += '\n' + addTab(_tab);
+				}
+				_addContent += e[i];
+				if (e[i+1] && e[i+1] != ';' && e[i+1] != ',') {
 					_addContent += '\n' + addTab(_tab);
 				}
 				break;
 			case ';':
-				_addContent = '\n';
+				_addContent += e[i];
+				if (e[i+1]) {
+					_addContent += '\n' + addTab(_tab);
+				}
 				break;
+			case ',':
+				_addContent += e[i];
+				if (e[i+1]) {
+					_addContent += '\n' + addTab(_tab);
+				}
+				break;
+			default:
+				_addContent += e[i];
+				break;
+
 		}
-		_trueContent += e[i] + _addContent;
+		_trueContent +=  _addContent;
 	}
 
 	
