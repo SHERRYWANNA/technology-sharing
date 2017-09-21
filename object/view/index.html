@@ -9,19 +9,16 @@
 	<div class="container">
 		<div class="nav">
 			<ul>
-				<li class="active"><a href="#preface">preface</a></li>
+				<li><a href="#preface" class="active">preface</a></li>
 				<li><a href="#assign">Object.assign()</a></li>
 				<li><a href="#create">Object.create()</a></li>
-				<li><a href="">Object.assign()</a></li>
-				<li><a href="">Object.assign()</a></li>
-				<li><a href="">Object.assign()</a></li>
 			</ul>
 		</div>
 		<div class="main">
 			<div class="block" id="preface">
 				<div class="block_title">
 					<h1>Object对象及其应用</h1>
-					<small class="h1">分享人： 郑倩倩</small>
+					<small class="h1">分享人： Z77</small>
 				</div>
 				<div class="block_content">
 					<p>前言：</p>
@@ -54,10 +51,16 @@
 						console.log(foo);
 					</pre>
 					<div class="run btn">run</div>
-					<p>对象不像其他Number、boolean、string类型等，如果是平常那样普通的赋值，那么源对象和目标对象就会指向同一地址，这就是js中的浅复制，其实</p>
+					<p>对象不像其他Number、boolean、string类型等，如果是平常那样普通的赋值，那么源对象和目标对象就会指向同一地址，这就是js中的浅拷贝，其实</p>
 				</div>
 			</div>
-		</div>
+			<div class="block" id="create">
+				<div class="block_title">
+					<h2>Object.create()</h2>
+					<small>主要功能： 会使用指定的原型对象及其属性去创建一个新的对象。</small>
+				</div>
+			</div>
+		</div> 
 		<div class="inputarea">
 			<div class="console">
 				<p class="console_title">- 假装这是一个控制台 -</p>

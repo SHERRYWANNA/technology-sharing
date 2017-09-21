@@ -168,10 +168,6 @@ var util = {
 
 
 
-// var $codeContent = query('.code');
-// for (var i = 0; i < $codeContent.length; i++) {
-// 	$codeContent[i].innerHTML = Code.formate($codeContent[i].innerHTML);
-// }
 addEvent(query('.code'), function(el) {
 	el.innerHTML = Code.formate(el.innerHTML);
 });
@@ -184,6 +180,13 @@ addEvent(query('.run'), function() {
 		_pre = _pre.previousSibling;
 	}
 	Code.run(_pre);
+}, 'click');
+
+addEvent(query('.nav a'), function() {
+	addEvent(query('.nav a'), function(el) {
+		el.className = '';
+	});
+	this.className = 'active';
 }, 'click');
 
 
