@@ -185,12 +185,50 @@ addEvent(query('.run'), function() {
 }, 'click');
 
 addEvent(query('.nav a'), function() {
+	addNavFun(this);
+}, 'click');
+
+var nav = {
+	$block: query('.block'),
+	blockFlag: [],
+	current: 0,
+	init: function() {
+		
+	}
+};
+var $block = query('.block');
+var blockFlag = [],
+	current = 0;
+var winHeight = window.innerHeight;
+clearblockFlag();
+window.addEventListener('scroll', function() {
+	var _scroll = document.body.scrollTop + winHeight,
+		next = current+1 == $block.length ? current : current+1,
+		pre = current-1 < 0 ? current : current-1;
+	if ($block[next].offsetTop >= _scroll && !blockFlag[next]) {
+		clearblockFlag();
+		blockFlag[next] = 1;
+		addNavFun(query('.nav a')[next]);
+		current = next;
+	} else if (_scroll >= $block[pre].offsetTop && !blockFlag[pre]) {
+		clearblockFlag();
+		blockFlag[pre] = 1;
+		addNavFun(query('.nav a')[pre]);
+		current = pre;
+	}
+});	
+
+function clearblockFlag() {
+	for (var i = 0; i < $block.length; i++) {
+		blockFlag.push(0);
+	}
+}
+function addNavFun(el) {
 	addEvent(query('.nav a'), function(el) {
 		el.className = '';
 	});
-	this.className = 'active';
-}, 'click');
-
+	el.className = 'active';
+}
 
 var key = {
 	tab: 9,
