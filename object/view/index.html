@@ -2,23 +2,23 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title></title>
+	<title>technology-sharing_object</title>
 	<link rel="stylesheet" type="text/css" href="../css/index.css">
 </head>
 <body>
 	<div class="container">
 		<div class="nav">
 			<ul>
-				<li class="active">preface</li>
-				<li>Object.assign()</li>
-				<li>Object.assign()</li>
-				<li>Object.assign()</li>
-				<li>Object.assign()</li>
-				<li>Object.assign()</li>
+				<li class="active"><a href="#preface">preface</a></li>
+				<li><a href="#assign">Object.assign()</a></li>
+				<li><a href="#create">Object.create()</a></li>
+				<li><a href="">Object.assign()</a></li>
+				<li><a href="">Object.assign()</a></li>
+				<li><a href="">Object.assign()</a></li>
 			</ul>
 		</div>
 		<div class="main">
-			<div class="block">
+			<div class="block" id="preface">
 				<div class="block_title">
 					<h1>Object对象及其应用</h1>
 					<small class="h1">分享人： 郑倩倩</small>
@@ -29,7 +29,7 @@
 					<p class="block_ct">本来打算也是用ppt的，但是感觉有时候要运行代码的话，换来换去总是不太麻烦。嘛，既然是前端就直接用页面来实现吧~</p>
 				</div>
 			</div>
-			<div class="block">
+			<div class="block" id="assign">
 				<div class="block_title">
 					<h2>Object.assign()</h2>
 					<small>主要功能： 将源对象内的参数字段添加或者覆盖到目标对象中,返回值为更新后的目标对象</small>
@@ -42,17 +42,30 @@
 						<p>sources: 源对象</p>
 					</div>
 					<pre class="code">
-						var foo = {a:'aaa',b: 'bbb',c: 'ccc'};
-						var target = Object.assign({},foo);
+						var origin = {a: 'aaa',b: 'bbb',c: 'ccc'},
+							add = {c: 111,e: 'bbb'};
+						var target = Object.assign({},origin,add);
 						console.log(target);
 					</pre>
+					<div class="run btn">run</div>
+					<pre class="code">
+						var foo = {a: 'aaa',b: 'bbb',c: 'ccc'};
+						Object.assign(foo,{d: 111});
+						console.log(foo);
+					</pre>
+					<div class="run btn">run</div>
+					<p>对象不像其他Number、boolean、string类型等，如果是平常那样普通的赋值，那么源对象和目标对象就会指向同一地址，这就是js中的浅复制，其实</p>
 				</div>
 			</div>
 		</div>
 		<div class="inputarea">
+			<div class="console">
+				<p class="console_title">- 假装这是一个控制台 -</p>
+				<pre class="console_content"></pre>
+			</div>
+
 			<pre class="content" contenteditable="true"></pre>
 			<div class="run btn">run</div>
-			<pre class="console"></pre>
 		</div>
 	</div>
 	<script type="text/javascript" src="../js/index.js"></script>

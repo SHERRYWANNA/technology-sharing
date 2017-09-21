@@ -1,4 +1,3 @@
-
 var cursor = {
     $el: query('.content')[0],
     position: 0,
@@ -43,97 +42,227 @@ var cursor = {
     }
 };
 
-{
-	var codeContent = query('.code');
-	for (var i = 0; i < codeContent.length; i++) {
-		codeContent[i].innerHTML = fomate(codeContent[i].innerHTML);
-	}
+var Code = {
+	run: function(el) {
+		var _content = el.innerHTML.replace(/console\.log/g, 'Code.outputFormate');
 
-}
-
-{
-	var key = {
-		tab: 9,
-		enter: 13,
-		shift: 16,
-		ctrl: 17,
-		comma:188,
-		bracket_braces_l: 219,
-		bracket_braces_r: 221
-	};
-	cursor.init();
-	var tab = 0,
-		ctrl = false,
-		shift = false;
-	query('.content')[0].addEventListener('keydown', function(e){
-		var _event = e || event,
-			keyCode = _event.keyCode;
-
-		console.log(keyCode);
-		var _ctrl = 0,
-			_shift = 0;
-		switch(keyCode) {
-			case key.tab: 
-				_event.preventDefault();
-				cursor.setCursortPosition('    ');
-				tab++;
-				break;
-			case key.enter:
-				_event.preventDefault();
-				if (ctrl) {
-					run();
-				} else {
-					cursor.setCursortPosition('\n');
-					for (var i = 0; i < tab; i++) {
-						cursor.setCursortPosition('    ');
+		query(".console_content")[0].innerHTML = "";
+		query('body')[0].removeChild(query('.myscript')[0]);
+		var _myScript = document.createElement('script');
+		_myScript.className = 'myscript';
+		_myScript.innerHTML = _content;
+		query('body')[0].appendChild(_myScript);
+	},
+	outputFormate: function(w) {
+		var _this = this;
+		query(".console_content")[0].innerHTML += _this.formate(objectFormat(w)) + '\n';
+		function objectFormat(e) {
+			var _output = '';
+			if (_this.isObject(e)) {
+				_output += '{';
+				var totalKey = Object.keys(e).length;
+				for (var i in e) {
+					if (_this.isObject(e[i])) {
+						_output += i + ': ' + objectFormat(e[i]);
+					} else {
+						_output += i + ': ' + e[i];
+					}
+					if (--totalKey) {
+						_output += ',';
+					} else {
+						_output += '}';
 					}
 				}
-				break;
-			case key.shift:
-				shift = true;
-				_shift = setTimeout(clearShift, 5e2);
-				break;
-			case key.ctrl:
-				ctrl = true;
-				_ctrl = setTimeout(clearCtrl, 5e2);
-				break;
-			case key.bracket_braces_l:
-				if (shift) 
-				tab++;
-				break;
-			case key.bracket_braces_r:
-				if (shift) 
-				tab--;
-				break;
+			}
+			return _output;
+		}
+	},
+	isObject: function(e) {
+		return (typeof e === 'object' && e.constructor === Object);
+	},
+	formate: function(e) {
+		e = e.replace(/[	|\n]/g, '');
+
+		var _tab = 0;
+		var _trueContent = '';
+		var _parenthesesNum = 0;
+
+		for (var i = 0; i < e.length; i++) {
+			var _addContent = '';
+			switch (e[i]) {
+				case '{':
+					_tab++;
+					_addContent += e[i];
+					if (e[i+1] && e[i+1] != '}') {
+						_addContent +=  '\n' + this.addTab(_tab);
+					}
+					break;
+				case '}':
+					_tab--;
+					if (e[i-1] && e[i-1] != ';' && e[i-1] != '{') {
+						_addContent += '\n' + this.addTab(_tab);
+					}
+					_addContent += e[i];
+					if (e[i+1] && !isEndCharacter(e[i+1])) {
+						_addContent += '\n' + this.addTab(_tab);
+					}
+					break;
+				case ';':
+					_addContent += e[i];
+					if (e[i+1]) {
+						_addContent += '\n' + this.addTab(_tab);
+					}
+					break;
+				case ',':
+					_addContent += e[i];
+					// if (e[i+1] && e[i+1] != '{' && e[i+1] != '"' && e[i+1] != "'") {
+					if (!_parenthesesNum) {
+						_addContent += '\n' + this.addTab(_tab);
+					}
+					break;
+				case '(': 
+					_addContent += e[i];
+					_parenthesesNum++;
+					break;
+				case ')':
+					_addContent += e[i];
+					_parenthesesNum--;
+					break;
+				default:
+					_addContent += e[i];
+					break;
+
+			}
+			_trueContent +=  _addContent;
 		}
 
-		if (keyCode !== 17) {
-			clearTimeout(_ctrl);
-			clearCtrl();
-		}
-		if (keyCode !== 16) {
-			clearTimeout(_shift);
-			clearShift();
-		}
+		return _trueContent;
 
-		function clearCtrl() {
-			ctrl = false;
+		function isEndCharacter(e) {
+			var endCharacter = ['}', ']', ';', ',', ')'];
+			return util.isInArray(e, endCharacter);
 		}
-		function clearShift() {
-			shift = false;
+	},
+	addTab: function(tab) {
+		var _space = '';
+		for (var i = tab - 1; i >= 0; i--) {
+			_space += '    ';
 		}
-	});
+		return _space;
+	}
+};
 
-	query('.run')[0].addEventListener('click', function() {
-		run();
-	});
+var util = {
+	isInArray: function (e, arr) {
+		for (var i = 0; i < arr.length; i++) {
+			if (e === arr[i]) {
+				return true;
+			}
+		}
+		return false;
+	}
+};
 
-	function run() {
-		var _content = query('.content')[0].innerHTML.replace(/console\.log/g, 'query(".console")[0].append');
-		query('.myscript')[0].innerHTML = _content;
+
+
+
+
+
+// var $codeContent = query('.code');
+// for (var i = 0; i < $codeContent.length; i++) {
+// 	$codeContent[i].innerHTML = Code.formate($codeContent[i].innerHTML);
+// }
+addEvent(query('.code'), function(el) {
+	el.innerHTML = Code.formate(el.innerHTML);
+});
+
+
+addEvent(query('.run'), function() {
+	console.log(this);
+	var _pre = this.previousSibling;
+	if (_pre.nodeType === 3 && _pre.nodeName === '#text') {
+		_pre = _pre.previousSibling;
+	}
+	Code.run(_pre);
+}, 'click');
+
+
+var key = {
+	tab: 9,
+	enter: 13,
+	shift: 16,
+	ctrl: 17,
+	comma:188,
+	bracket_braces_l: 219,
+	bracket_braces_r: 221
+};
+cursor.init();
+var tab = 0,
+	ctrl = false,
+	shift = false;
+query('.content')[0].addEventListener('keydown', function(e){
+	var _event = e || event,
+		keyCode = _event.keyCode;
+
+	var _ctrl = 0,
+		_shift = 0;
+	switch(keyCode) {
+		case key.tab: 
+			_event.preventDefault();
+			cursor.setCursortPosition('    ');
+			tab++;
+			break;
+		case key.enter:
+			_event.preventDefault();
+			if (ctrl) {
+				run(this);
+			} else {
+				cursor.setCursortPosition('\n');
+				for (var i = 0; i < tab; i++) {
+					cursor.setCursortPosition('    ');
+				}
+			}
+			break;
+		case key.shift:
+			shift = true;
+			_shift = setTimeout(clearShift, 5e2);
+			break;
+		case key.ctrl:
+			ctrl = true;
+			_ctrl = setTimeout(clearCtrl, 5e2);
+			break;
+		case key.bracket_braces_l:
+			if (shift) 
+			tab++;
+			break;
+		case key.bracket_braces_r:
+			if (shift) 
+			tab--;
+			break;
 	}
 
-}
+	if (keyCode !== key.ctrl) {
+		clearTimeout(_ctrl);
+		clearCtrl();
+	}
+	if (keyCode !== key.shift) {
+		clearTimeout(_shift);
+		clearShift();
+	}
+
+	function clearCtrl() {
+		ctrl = false;
+	}
+	function clearShift() {
+		shift = false;
+	}
+});
+
+var $anchor = query('li a');
+
+
+
+
 
 
 
@@ -144,58 +273,14 @@ function query(e, fa) {
 	}
 	return _fa.querySelectorAll(e);
 }
-function fomate(e) {
-	var _tab = 0;
-	e = e.replace(/[	|\n]/g, '');
-	var _trueContent = '';
-	for (var i = 0; i < e.length; i++) {
-		var _addContent = '';
-		switch (e[i]) {
-			case '{':
-				_tab++;
-				_addContent += e[i];
-				if (e[i+1] && e[i+1] != '}') {
-					_addContent +=  '\n' + addTab(_tab);
-				}
-				break;
-			case '}':
-				_tab--;
-				if (e[i-1] && e[i-1] != ';' && e[i-1] != '{') {
-					_addContent += '\n' + addTab(_tab);
-				}
-				_addContent += e[i];
-				if (e[i+1] && e[i+1] != ';' && e[i+1] != ',') {
-					_addContent += '\n' + addTab(_tab);
-				}
-				break;
-			case ';':
-				_addContent += e[i];
-				if (e[i+1]) {
-					_addContent += '\n' + addTab(_tab);
-				}
-				break;
-			case ',':
-				_addContent += e[i];
-				if (e[i+1]) {
-					_addContent += '\n' + addTab(_tab);
-				}
-				break;
-			default:
-				_addContent += e[i];
-				break;
 
+function addEvent(els, fun, event) {
+	for (var i = 0; i < els.length; i++) {
+		if (event) {
+			els[i].addEventListener(event, fun);
+		} else {
+			fun(els[i]);
 		}
-		_trueContent +=  _addContent;
-	}
-
-	
-	return _trueContent;
-
-	function addTab(tab) {
-		var _space = '';
-		for (var i = tab - 1; i >= 0; i--) {
-			_space += '    ';
-		}
-		return _space;
+		
 	}
 }
