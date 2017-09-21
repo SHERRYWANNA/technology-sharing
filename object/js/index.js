@@ -44,7 +44,8 @@ var cursor = {
 
 var Code = {
 	run: function(el) {
-		var _content = el.innerHTML.replace(/console\.log/g, 'Code.outputFormate');
+		var _content = el.innerHTML;
+		_content = _content.replace(/console\.log\((.+?)\)/g, "Code.outputFormate('$1');Code.outputFormate($1)");
 
 		query(".console_content")[0].innerHTML = "";
 		query('body')[0].removeChild(query('.myscript')[0]);
@@ -73,6 +74,8 @@ var Code = {
 						_output += '}';
 					}
 				}
+			} else {
+				_output = e; 
 			}
 			return _output;
 		}
@@ -174,7 +177,6 @@ addEvent(query('.code'), function(el) {
 
 
 addEvent(query('.run'), function() {
-	console.log(this);
 	var _pre = this.previousSibling;
 	if (_pre.nodeType === 3 && _pre.nodeName === '#text') {
 		_pre = _pre.previousSibling;

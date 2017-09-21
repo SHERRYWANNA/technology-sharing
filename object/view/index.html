@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>technology-sharing_object</title>
+	<link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" type="text/css" href="../css/index.css">
 </head>
 <body>
@@ -38,20 +39,26 @@
 						<p>target: 目标对象</p>
 						<p>sources: 源对象</p>
 					</div>
-					<pre class="code">
-						var origin = {a: 'aaa',b: 'bbb',c: 'ccc'},
-							add = {c: 111,e: 'bbb'};
-						var target = Object.assign({},origin,add);
-						console.log(target);
-					</pre>
-					<div class="run btn">run</div>
-					<pre class="code">
-						var foo = {a: 'aaa',b: 'bbb',c: 'ccc'};
-						Object.assign(foo,{d: 111});
-						console.log(foo);
-					</pre>
-					<div class="run btn">run</div>
-					<p>对象不像其他Number、boolean、string类型等，如果是平常那样普通的赋值，那么源对象和目标对象就会指向同一地址，这就是js中的浅拷贝，其实</p>
+					<p class="block_intro">方法会返回一个结果对象</p>
+					<div class="codearea">
+						<pre class="code">
+							var origin = {a: 'aaa',b: 'bbb',c: 'ccc'},
+								add = {c: 111,e: 'bbb'};
+							var target = Object.assign({},origin,add);
+							console.log(target);
+						</pre>
+						<div class="run btn">run</div>
+					</div>
+					<p class="block_intro">同时源对象也会改变，值和返回的对象相同</p>
+					<div class="codearea">
+						<pre class="code">
+							var foo = {a: 'aaa',b: 'bbb',c: 'ccc'};
+							Object.assign(foo,{d: 111});
+							console.log(foo);
+						</pre>
+						<div class="run btn">run</div>
+					</div>
+					<p class="block_intro">对象不像其他Number、boolean、string类型等，如果是平常那样普通的赋值，那么源对象和目标对象就会指向同一地址，这就是js中的浅拷贝，其实</p>
 				</div>
 			</div>
 			<div class="block" id="create">

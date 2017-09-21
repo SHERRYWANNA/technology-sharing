@@ -160,6 +160,11 @@ body, html {
 .block_ct {
 	text-indent: 2em;
 }
+.block_intro {
+	padding-top: 20px;
+	margin-bottom: -10px;
+	font-size: 16px;
+}
 .tip {
 	background-color: #bad7ed;
 	padding: 6px 10px;
