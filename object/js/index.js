@@ -212,7 +212,6 @@ var Nav = {
 Nav.scrollListener().addEvent();
 Code.codeAreaFormate();
 
-
 addEvent(query('.run'), function() {
 	var _pre = this.previousSibling;
 	if (_pre.nodeType === 3 && _pre.nodeName === '#text') {
@@ -220,7 +219,6 @@ addEvent(query('.run'), function() {
 	}
 	Code.run(_pre);
 }, 'click');
-
 
 var key = {
 	tab: 9,

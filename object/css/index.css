@@ -181,6 +181,14 @@ p {
 h3 {
 	font-size: 22px;
 }
+h4 {
+	font-size: 20px;
+}
+span.name {
+	font-weight: bold;
+	background-color: #eee;
+	display: inline-block;
+}
 .block_title small {
 	display: block;
 	font-size: 14px;

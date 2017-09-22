@@ -14,6 +14,7 @@
 				<li><a href="#assign">Object.assign()</a></li>
 				<li><a href="#create">Object.create()</a></li>
 				<li><a href="#copy">深拷贝与浅拷贝</a></li>
+				<li><a href="#defineProperty">Object.defineProperty()</a></li>
 			</ul>
 		</div>
 		<div class="main">
@@ -172,9 +173,10 @@
 			<div class="block" id="copy">
 				<div class="block_title">
 					<h2>深拷贝与浅拷贝</h2>
-					<small>这是一个令人头疼的问题</small>
+					<small>既然说到了assign和create方法，我也顺便把这个问题给分享了。这是一个令人头疼的问题，之前学习vue的时候因为浅拷贝引起的我还以为是vue把它们绑定了，当时郁闷了好久，还是后来<span class="name">@zhj</span>和我讨论问题的时候才发现的。感谢大佬</small>
 				</div>
 				<div class="block_content">
+					<h4>浅拷贝</h4>
 					<p class="block_intro">我们先来看一个现象</p>
 					<div class="codearea">
 						<pre class="code">
@@ -205,7 +207,7 @@
 					<p class="block_intro">深拷贝的现象大概会是下面这样的</p>
 					<div class="codearea">
 						<pre class="code">
-							var a = {a:1, b:2, c:3};
+							var a = {a:1,b:2,c:3};
 							var b = Object.assign({},a);
 							console.log(b);
 							b.d = 4;
@@ -215,9 +217,25 @@
 						<div class="run btn">run</div>
 					</div>
 					<p class="block_intro">但是注意，上面并不没有实现真正的深拷贝,因为当对象中还包含另一个对象，那么那个目标对象内部对象和源对象的内部对象还是指向同一储存地址。</p>
-
+					<p class="block_intro">如果想实现深拷贝，由于时间的关系我就不具体贴了，这里我提供一个思想就是用assign或者forin方法递归获取对象，等有时间我会代码补上，大家这么厉害我相信自己实现也是不难的 :P</p>
 				</div>
 
+			</div>
+
+
+			<div class="block" id="copy">
+				<div class="block_title">
+					<h2>Object.defineProperty()</h2>
+					<small>噔噔噔噔~~<br>这就是我们今天的重头戏！他就是平常我们看到的数据绑定的重点依靠对象</small>
+				</div>
+				<div class="block_content">
+					<div class="tip">
+						<p class="title">语法</p>
+						<p>Object.defineProperty(obj, propertyName, {...properties})</p>
+						<p>target: 目标对象(一般是一个空的对象)</p>
+						<p>properties: 所需要的包含添加的属性与该属性的值的对象</p>
+					</div>
+				</div>
 			</div>
 		</div> 
 		<div class="inputarea">
