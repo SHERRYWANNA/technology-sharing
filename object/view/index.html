@@ -14,7 +14,8 @@
 				<li><a href="#assign">Object.assign()</a></li>
 				<li><a href="#create">Object.create()</a></li>
 				<li><a href="#copy">深拷贝与浅拷贝</a></li>
-				<li><a href="#defineProperty">Object.defineProperty()</a></li>
+				<li><a href="#defineproperty">Object.defineProperty()</a></li>
+				<li><a href="#defineproperties">Object.defineProperties()</a></li>
 			</ul>
 		</div>
 		<div class="main">
@@ -224,7 +225,7 @@
 			</div>
 
 
-			<div class="block" id="copy">
+			<div class="block" id="defineproperty">
 				<div class="block_title">
 					<h2>Object.defineProperty()</h2>
 					<small>噔噔噔噔~~<br>这就是我们今天的重头戏！他就是平常我们看到的数据绑定的重点依靠对象</small>
@@ -259,51 +260,121 @@
 					<p class="block_intro">给属性提供一个 setter 的方法，若主动设定了，每次给该属性设定值的时候，都会调用设定的方法。<b>默认为 undefined</b>。</p>
 					<p class="block_notice">注意： 存储描述符和数据描述符不能同时存在！</p>
 					<p class="block_intro">若定义属性时如果没有明确设定为数据描述符或者存储描述符即没有设定 get/set/value/writable ，那它将被归类为数据描述符</p>
-					<h4>实现简单的数据绑定</h4>
+					<h4>实现简单的数据监听</h4>
+					<p class="block_intro">实现效果：当a变化的时候，页面输出 a 个 *</p>
 					<div class="codearea">
 						<pre class="code">
-							var b = 0;
-							var obj = {};
-							Object.defineProperty(obj, "a", {
-								configurable: true,
-								enumerable: true,
-								get: function () {
-									return b;
-								},
-								set: function (value) {
-									console.log(this);
-									b = value;
-								}
-							});
-							obj.a = 2;
-							console.log(b);
-							console.log(obj);
-						</pre>
-						<div class="run btn">run</div>
-					</div>
-					<h4>实现简单的数据双向绑定</h4>
-					<div class="codearea">
-						<pre class="code">
-							var n = 0;
+							var temp = 0;
 							Object.defineProperty(window, "a", {
 								configurable: true,
 								enumerable: true,
 								get: function () {
-									return this.b;
+									return temp;
 								},
 								set: function (value) {
-									this.b = value;
+									var _a = '';
+									for (var i = 0; i < value; i++) {
+										_a += '*';
+									}
+									console.log(_a);
+									temp = value;
 								}
 							});
-							a = 2;
-							console.log(a);
-							console.log(b);
-							b = 3;
-							console.log(a);
-							console.log(b);
 						</pre>
 						<div class="run btn">run</div>
 					</div>
+					<p class="block_intro">接下来让我们看看dom和数据的绑定</p>
+					<div class="codearea">
+						<pre class="code">
+							Object.defineProperty(window, 'temp', {
+								configurable: true,
+								enumerable: true,
+								set: function (value) {
+									window.document.getElementsByClassName('b')[0].innerHTML = value;
+								}
+							});
+							document.getElementsByClassName('a')[0].addEventListener('input', function() {
+								temp = this.value;
+							}, null);
+							
+						</pre>
+						<div class="run btn">run</div>
+					</div>
+					<input type="text" name="" class="a">
+					<div class="b"></div>
+					<div class="browsersupport">
+						<h3>浏览器兼容性</h3>
+						<table class="browsersupport_table">
+						  	<tbody>
+						  		<tr>
+							      	<th>Chrome</th>
+							      	<th>Firefox</th>
+							      	<th>IE</th>
+							      	<th>Opera</th>
+							      	<th>Safari</th>
+						  		</tr>
+						  		<tr class="browsersupport_icons">
+						      		<td><span class="icon icon_browser icon_browser-bschrome"></span></td>
+						      		<td><span class="icon icon_browser icon_browser-bsfirefox"></span></td>
+						      		<td><span class="icon icon_browser icon_browser-bsie"></span></td>
+						      		<td><span class="icon icon_browser icon_browser-bsopera"></span></td>
+						      		<td><span class="icon icon_browser icon_browser-bssafari"></span></td>
+						  		</tr>
+						  		<tr>
+						  			<td>5</td>
+						  			<td>4.0</td>
+						  			<td>9</td>
+						  			<td>11.60</td>
+						  			<td>5.1</td>
+						  		</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<div class="block" id="defineproperties">
+				<div class="block_title">
+					<h2>Object.defineProperty()</h2>
+					<small>这个是上面defineproperty的简化方法，且可以一次定义多个属性</small>
+				</div>
+				<div class="block_content">
+					<div class="tip">
+						<p class="title">语法</p>
+						<p class="use">Object.defineProperty(obj, {.....property})</p>
+						<p>obj: 一个已定义的目标对象（未定义的对象会导致报错）</p>
+						<p>property: 属性及其描述符（可多个）</p>
+					</div>
+					<p class="block_intro">有了上面的例子相信这个应该不难理解看，所以我们只要知道基本用法就行了</p>
+					<div class="codearea">
+						<pre class="code">
+							Object.defineProperties(window, {
+								"temp": {
+									configurable: true,
+									enumerable: true,
+									set: function (value) {
+										window.a = value;
+									}
+								},
+								"temp1": {
+									configurable: true,
+									enumerable: true,
+									set: function (value) {
+										window.temp = value;
+									}
+								}
+							});
+							temp = 2;
+							console.log(window.a);
+							temp1 = 3;
+							console.log(window.a);
+						</pre>
+						<div class="run btn">run</div>
+					</div>
+					<p class="block_intro">由于这个方法是由上面那个衍生出来的，所以浏览器的兼容性大同小异。</p>
 					<div class="browsersupport">
 						<h3>浏览器兼容性</h3>
 						<table class="browsersupport_table">

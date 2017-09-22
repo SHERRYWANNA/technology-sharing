@@ -4,7 +4,7 @@ var Code = {
 	$console: query('.console_content')[0],
 	run: function(el) {
 		var _content = util.removeTag(el.innerHTML);
-		_content = _content.replace(/console\.log\((.+?)\);/g, "Code.outputFormate('$1');Code.outputFormate($1);");
+		_content = this.translateContent(_content.replace(/console\.log\((.+?)\);/g, 'Code.outputFormate("$1");Code.outputFormate($1);'));
 
 		this.$console.innerHTML = "";
 		this.$body.removeChild(query('.myscript')[0]);
@@ -61,9 +61,12 @@ var Code = {
 	isArray: function(e) {
 		return (typeof e === 'object' && e.constructor === Array);
 	},
+	translateContent: function(e) {
+		return e.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+	},
 	formate: function(e) {
 		if (typeof e === 'string') {
-			e = e.replace(/[	|\n]/g, '');
+			e = this.translateContent(e.replace(/[	|\n]/g, ''));
 		}
 		var _tab = 0;
 		var _trueContent = '';
@@ -71,6 +74,7 @@ var Code = {
 
 		for (var i = 0; i < e.length; i++) {
 			var _addContent = '';
+			var _inFun = _brackets[_brackets.length-1] != '(' ? false : true;
 			switch (e[i]) {
 				case '{':
 					_tab++;
@@ -93,7 +97,7 @@ var Code = {
 					break;
 				case ';':
 					_addContent += e[i];
-					if (e[i+1]) {
+					if (e[i+1] && !_inFun) {
 						_addContent += '\n';
 						if (!isEndCharacter(e[i+1])) {
 							_addContent += this.addTab(_tab);
@@ -104,7 +108,7 @@ var Code = {
 					break;
 				case ',':
 					_addContent += e[i];
-					if (_brackets[_brackets.length-1] != '(') {
+					if (!_inFun) {
 						_addContent += '\n' + this.addTab(_tab);
 					}
 					break;
@@ -131,10 +135,10 @@ var Code = {
 			return util.isInArray(e, endCharacter);
 		}
 		function removeRecentBracket(char) {
-			if (char == '{') {
-				char = '}';
-			} else if (char == '(') {
-				char = ')';
+			if (char == '}') {
+				char = '{';
+			} else if (char == ')') {
+				char = '(';
 			}
 			for (var i = _brackets.length-1; i >= 0; i--) {
 				if (_brackets[i] == char) {

@@ -198,6 +198,13 @@ h6 {
 	font-size: 16px;
 	font-weight: bold;
 }
+input {
+	margin-top: 10px;
+	background-color: #fff;
+	border-radius: 4px;
+	padding: 4px 6px;
+	border: 1px solid #eee;
+}
 span.name {
 	font-weight: bold;
 	background-color: #eee;
