@@ -1,69 +1,37 @@
-var cursor = {
-    $el: query('.content')[0],
-    position: 0,
-    contentHeight: 0,
-    init: function () {
-        this.contentHeight = parseInt(getComputedStyle(this.$el, null).getPropertyValue('height'));
-    },
-    getCursortPosition: function () {
-        if (window.getSelection) {
-            var _sel = window.getSelection();
-            var _range = _sel.getRangeAt(0);
-            this.position = _range.startOffset;
-            return _range.startOffset;
-        }
-    },
-    setCursortPosition: function (text) {
-        if (window.getSelection) {
-            var _div = this.$el;
-            var _sel = window.getSelection(),
-                _range = _sel.getRangeAt(0),
-                _length = 1;
-            if (text == '\r\n' && _range.endOffset == _range.startOffset && !_div.innerHTML.substr(-1).match(/[\r|\n]/)) {
-                text = '\r\n\r\n';
-            }
-            var i = _range.createContextualFragment(text);
-            var s = i.lastChild;
-            var curPosition = _range.createContextualFragment('<span class="curPosition"></span>');
-            _range.insertNode(curPosition);
-            _range.insertNode(i);
-            _range.setStartAfter(s);
-            _range.setEndAfter(s);
-            _sel.removeAllRanges();
-            _sel.addRange(_range);
-            var _curPosition = query('span.curPosition', _div)[0],
-            	_top = _curPosition.offsetTop;
-
-            if (_top - 53 > this.contentHeight) {
-                _div.scrollTop = _top - this.contentHeight;
-            }
-            _div.removeChild(_curPosition);
-        }
-    }
-};
-
 var Code = {
+	$codeArea: query('.code'),
+	$body: document.body,
+	$console: query('.console_content')[0],
 	run: function(el) {
-		var _content = el.innerHTML;
-		_content = _content.replace(/console\.log\((.+?)\)/g, "Code.outputFormate('$1');Code.outputFormate($1)");
+		var _content = util.removeTag(el.innerHTML);
+		_content = _content.replace(/console\.log\((.+?)\);/g, "Code.outputFormate('$1');Code.outputFormate($1);");
 
-		query(".console_content")[0].innerHTML = "";
-		query('body')[0].removeChild(query('.myscript')[0]);
+		this.$console.innerHTML = "";
+		this.$body.removeChild(query('.myscript')[0]);
 		var _myScript = document.createElement('script');
 		_myScript.className = 'myscript';
-		_myScript.innerHTML = _content;
-		query('body')[0].appendChild(_myScript);
+		_myScript.innerHTML = '{' + _content + '}';
+		this.$body.appendChild(_myScript);
+	},
+	clear: function() {
+		this.$console.innerHTML = '';
 	},
 	outputFormate: function(w) {
 		var _this = this;
-		query(".console_content")[0].innerHTML += _this.formate(objectFormat(w)) + '\n';
+		if (typeof w !== 'string') {
+			w = eval(w);
+		}
+		if (typeof w === 'number') {
+			w = w.toString();
+		}
+		_this.$console.innerHTML += _this.formate(objectFormat(w)) + '\n';
 		function objectFormat(e) {
 			var _output = '';
 			if (_this.isObject(e)) {
 				_output += '{';
 				var totalKey = Object.keys(e).length;
 				for (var i in e) {
-					if (_this.isObject(e[i])) {
+					if (_this.isObject(e[i]) || _this.isArray(e[i])) {
 						_output += i + ': ' + objectFormat(e[i]);
 					} else {
 						_output += i + ': ' + e[i];
@@ -74,18 +42,29 @@ var Code = {
 						_output += '}';
 					}
 				}
+			} else if (_this.isArray(e)) {
+				_output += '[' + e.join(' ') + ']';
 			} else {
 				_output = e; 
 			}
 			return _output;
 		}
 	},
+	codeAreaFormate: function() {
+		addEvent(this.$codeArea, function(el) {
+			el.innerHTML = Code.formate(el.innerHTML);
+		});
+	},
 	isObject: function(e) {
 		return (typeof e === 'object' && e.constructor === Object);
 	},
+	isArray: function(e) {
+		return (typeof e === 'object' && e.constructor === Array);
+	},
 	formate: function(e) {
-		e = e.replace(/[	|\n]/g, '');
-
+		if (typeof e === 'string') {
+			e = e.replace(/[	|\n]/g, '');
+		}
 		var _tab = 0;
 		var _trueContent = '';
 		var _parenthesesNum = 0;
@@ -113,7 +92,10 @@ var Code = {
 				case ';':
 					_addContent += e[i];
 					if (e[i+1]) {
-						_addContent += '\n' + this.addTab(_tab);
+						_addContent += '\n';
+						if (!isEndCharacter(e[i+1])) {
+							_addContent += this.addTab(_tab);
+						}
 					}
 					break;
 				case ',':
@@ -155,25 +137,80 @@ var Code = {
 	}
 };
 
-var util = {
-	isInArray: function (e, arr) {
-		for (var i = 0; i < arr.length; i++) {
-			if (e === arr[i]) {
-				return true;
-			}
-		}
-		return false;
+var ConsolePast = {
+	$el: query('.content')[0],
+	cursor: new Cursor(query('.content')[0]),
+	pastedEvent: function() {
+		var _this = this;
+		this.$el.addEventListener('paste', function (data) {
+			var _data = data || event;
+	        var clipboardData, pastedData;
+	        _data.stopPropagation();
+	        _data.preventDefault();
+	        clipboardData = _data.clipboardData || window.clipboardData;
+	        pastedData = clipboardData.getData('Text');
+	        if (util.isNotEmpty(pastedData)) {
+	            var _text = util.removeTag(pastedData);
+	            _this.cursor.setCursortPosition(_text);
+	        }
+		});
 	}
 };
 
+var Nav = {
+	$block: query('.block'),
+	$navli: query('.nav a'),
+	blockFlag: [],
+	current: 0,
+	init: function() {
+		this.winHeight = window.innerHeight;
+		this.clearblockFlag();
+		this.blockFlag[0] = 1;
+	},
+	scrollListener: function() {
+		var _this = this;
+		_this.init();
+		var _body = document.documentElement || document.body;
+		window.addEventListener('scroll', function() {
+			var _scroll = _body.scrollTop,
+				_next = _this.current+1 == _this.$block.length ? _this.current : _this.current+1,
+				_pre = _this.current-1 < 0 ? _this.current : _this.current-1;
 
+			if (_scroll >= _this.$block[_next].offsetTop && !_this.blockFlag[_next]) {
+				_this.navSelect(_next);
+			} else if (_this.$block[_pre].offsetTop >= _scroll && !_this.blockFlag[_pre]) {
+				_this.navSelect(_pre);
+			}
+		});
+		return _this;
+	},
+	clearblockFlag: function() {
+		for (var i = 0; i < this.$block.length; i++) {
+			this.blockFlag[i] = 0;
+		}
+	},
+	addEvent: function() {
+		var _this = this;
+		addEvent(this.$navli, function($el, i) {
+			_this.navSelect(i);
+		}, 'click');
+	},
+	navSelect: function(i) {
+		this.clearblockFlag();
+		this.blockFlag[i] = 1;
+		this.addNavStyle(this.$navli[i]);
+		this.current = i;
+	},
+	addNavStyle: function(el) {
+		addEvent(this.$navli, function($el) {
+			$el.className = '';
+		});
+		el.className = 'active';
+	}
+};
 
-
-
-
-addEvent(query('.code'), function(el) {
-	el.innerHTML = Code.formate(el.innerHTML);
-});
+Nav.scrollListener().addEvent();
+Code.codeAreaFormate();
 
 
 addEvent(query('.run'), function() {
@@ -184,51 +221,6 @@ addEvent(query('.run'), function() {
 	Code.run(_pre);
 }, 'click');
 
-addEvent(query('.nav a'), function() {
-	addNavFun(this);
-}, 'click');
-
-var nav = {
-	$block: query('.block'),
-	blockFlag: [],
-	current: 0,
-	init: function() {
-		
-	}
-};
-var $block = query('.block');
-var blockFlag = [],
-	current = 0;
-var winHeight = window.innerHeight;
-clearblockFlag();
-window.addEventListener('scroll', function() {
-	var _scroll = document.body.scrollTop + winHeight,
-		next = current+1 == $block.length ? current : current+1,
-		pre = current-1 < 0 ? current : current-1;
-	if ($block[next].offsetTop >= _scroll && !blockFlag[next]) {
-		clearblockFlag();
-		blockFlag[next] = 1;
-		addNavFun(query('.nav a')[next]);
-		current = next;
-	} else if (_scroll >= $block[pre].offsetTop && !blockFlag[pre]) {
-		clearblockFlag();
-		blockFlag[pre] = 1;
-		addNavFun(query('.nav a')[pre]);
-		current = pre;
-	}
-});	
-
-function clearblockFlag() {
-	for (var i = 0; i < $block.length; i++) {
-		blockFlag.push(0);
-	}
-}
-function addNavFun(el) {
-	addEvent(query('.nav a'), function(el) {
-		el.className = '';
-	});
-	el.className = 'active';
-}
 
 var key = {
 	tab: 9,
@@ -239,7 +231,9 @@ var key = {
 	bracket_braces_l: 219,
 	bracket_braces_r: 221
 };
-cursor.init();
+
+ConsolePast.pastedEvent();
+var consoleInput = Cursor(query('.content')[0]);
 var tab = 0,
 	ctrl = false,
 	shift = false;
@@ -252,17 +246,17 @@ query('.content')[0].addEventListener('keydown', function(e){
 	switch(keyCode) {
 		case key.tab: 
 			_event.preventDefault();
-			cursor.setCursortPosition('    ');
+			consoleInput.setCursortPosition('    ');
 			tab++;
 			break;
 		case key.enter:
 			_event.preventDefault();
 			if (ctrl) {
-				run(this);
+				Code.run(this);
 			} else {
-				cursor.setCursortPosition('\n');
+				consoleInput.setCursortPosition('\n');
 				for (var i = 0; i < tab; i++) {
-					cursor.setCursortPosition('    ');
+					consoleInput.setCursortPosition('    ');
 				}
 			}
 			break;
@@ -301,11 +295,6 @@ query('.content')[0].addEventListener('keydown', function(e){
 	}
 });
 
-var $anchor = query('li a');
-
-
-
-
 
 
 
@@ -320,10 +309,15 @@ function query(e, fa) {
 function addEvent(els, fun, event) {
 	for (var i = 0; i < els.length; i++) {
 		if (event) {
-			els[i].addEventListener(event, fun);
+			addEventFun(i);
 		} else {
-			fun(els[i]);
+			fun(els[i], i);
 		}
-		
+	}
+	function addEventFun(n) {
+		els[n].addEventListener(event, function(e) {
+			var _event = e || event;
+			fun.call(this, _event, n);
+		});
 	}
 }
