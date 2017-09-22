@@ -67,13 +67,14 @@ var Code = {
 		}
 		var _tab = 0;
 		var _trueContent = '';
-		var _parenthesesNum = 0;
+		var _brackets = [];
 
 		for (var i = 0; i < e.length; i++) {
 			var _addContent = '';
 			switch (e[i]) {
 				case '{':
 					_tab++;
+					_brackets.push(e[i]);
 					_addContent += e[i];
 					if (e[i+1] && e[i+1] != '}') {
 						_addContent +=  '\n' + this.addTab(_tab);
@@ -81,6 +82,7 @@ var Code = {
 					break;
 				case '}':
 					_tab--;
+					removeRecentBracket(e[i]);
 					if (e[i-1] && e[i-1] != ';' && e[i-1] != '{') {
 						_addContent += '\n' + this.addTab(_tab);
 					}
@@ -95,23 +97,24 @@ var Code = {
 						_addContent += '\n';
 						if (!isEndCharacter(e[i+1])) {
 							_addContent += this.addTab(_tab);
+						} else {
+							_addContent += this.addTab(_tab-1);
 						}
 					}
 					break;
 				case ',':
 					_addContent += e[i];
-					// if (e[i+1] && e[i+1] != '{' && e[i+1] != '"' && e[i+1] != "'") {
-					if (!_parenthesesNum) {
+					if (_brackets[_brackets.length-1] != '(') {
 						_addContent += '\n' + this.addTab(_tab);
 					}
 					break;
 				case '(': 
 					_addContent += e[i];
-					_parenthesesNum++;
+					_brackets.push(e[i]);
 					break;
 				case ')':
 					_addContent += e[i];
-					_parenthesesNum--;
+					removeRecentBracket(e[i]);
 					break;
 				default:
 					_addContent += e[i];
@@ -126,6 +129,19 @@ var Code = {
 		function isEndCharacter(e) {
 			var endCharacter = ['}', ']', ';', ',', ')'];
 			return util.isInArray(e, endCharacter);
+		}
+		function removeRecentBracket(char) {
+			if (char == '{') {
+				char = '}';
+			} else if (char == '(') {
+				char = ')';
+			}
+			for (var i = _brackets.length-1; i >= 0; i--) {
+				if (_brackets[i] == char) {
+					_brackets.splice(i,1);
+					return;
+				}
+			}
 		}
 	},
 	addTab: function(tab) {
