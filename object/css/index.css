@@ -179,10 +179,24 @@ p {
 	font-weight: bold;
 }
 h3 {
+	padding-top: 20px;
 	font-size: 22px;
+	font-weight: bold;
 }
 h4 {
+	padding-top: 20px;
 	font-size: 20px;
+	font-weight: bold;
+}
+h5 {
+	padding-top: 20px;
+	font-size: 18px;
+	font-weight: bold;
+}
+h6 {
+	padding-top: 20px;
+	font-size: 16px;
+	font-weight: bold;
 }
 span.name {
 	font-weight: bold;
@@ -205,11 +219,21 @@ span.name {
 	text-indent: 2em;
 }
 .block_intro {
-	padding-top: 20px;
-	margin-bottom: -10px;
+	padding-top: 10px;
 	font-size: 16px;
 }
-
+.block_notice {
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 30px;
+	color: #cf3f25;
+}
+.block_a {
+	padding-top: 10px;
+	display: block;
+	color: #448aff;
+	text-decoration: underline;
+}
 .tip {
 	background-color: #bad7ed;
 	padding: 6px 10px;
@@ -226,16 +250,19 @@ span.name {
 	font-weight: bold;
 	border-bottom: 1px dashed #5bc5ed;
 	line-height: 2em;
-	margin-bottom: 8px;
 }
-
+.tip .use {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 16px;
+}
 .code {
 	background-color: #eee;
 	border: 1px dashed #ccc;
 	font-size: 14px;
 	padding: 6px 10px;
 	border-radius: 6px;
-	margin-top: 20px;
+	margin-top: 10px;
 
 }
 
