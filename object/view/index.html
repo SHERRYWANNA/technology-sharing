@@ -11,6 +11,7 @@
 		<div class="nav">
 			<ul>
 				<li><a href="#preface" class="active">preface</a></li>
+				<li><a href="#keys">Object.keys()</a></li>
 				<li><a href="#assign">Object.assign()</a></li>
 				<li><a href="#create">Object.create()</a></li>
 				<li><a href="#copy">深拷贝与浅拷贝</a></li>
@@ -31,6 +32,55 @@
 				</div>
 			</div>
 
+			<div class="block" id="keys">
+				<div class="block_title">
+					<h1>Object.keys()</h1>
+					<small>该方法会返回一个指定对象可枚举 属性名 组成的数组</small>
+				</div>
+				<div class="block_content">
+					<div class="tip">
+						<p class="title">语法</p>
+						<p class="use">Object.keys(obj)</p>
+						<p>obj: 指定对象</p>
+						<p>sources: 源对象(多个)</p>
+					</div>
+					<div class="codearea">
+						<pre class="code">
+							var origin = {a: 'aaa',b: 'bbb',c: 'ccc'};
+							console.log(Object.keys(origin));
+						</pre>
+						<div class="run btn">run</div>
+					</div>
+					<div class="browsersupport">
+						<h3>浏览器兼容性</h3>
+						<table class="browsersupport_table">
+						  	<tbody>
+						  		<tr>
+							      	<th>Chrome</th>
+							      	<th>Firefox</th>
+							      	<th>IE</th>
+							      	<th>Opera</th>
+							      	<th>Safari</th>
+						  		</tr>
+						  		<tr class="browsersupport_icons">
+						      		<td><span class="icon icon_browser icon_browser-bschrome"></span></td>
+						      		<td><span class="icon icon_browser icon_browser-bsfirefox"></span></td>
+						      		<td><span class="icon icon_browser icon_browser-noneie"></span></td>
+						      		<td><span class="icon icon_browser icon_browser-bsopera"></span></td>
+						      		<td><span class="icon icon_browser icon_browser-bssafari"></span></td>
+						  		</tr>
+						  		<tr>
+						  			<td>5</td>
+						  			<td>4.0 (2.0)</td>
+						  			<td>9</td>
+						  			<td>12</td>
+						  			<td>5</td>
+						  		</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 
 			<div class="block" id="assign">
 				<div class="block_title">
