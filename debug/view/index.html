@@ -2,8 +2,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>technology-sharing_object</title>
+    <title>technology-sharing_debug</title>
     <link rel="shortcut icon" href="../../resource/favicon/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="../../resourc/css/init.css">
     <link rel="stylesheet" type="text/css" href="../css/index.css">
 </head>
 <body>
@@ -439,88 +440,7 @@
             </div>
 
 
-
-
-            <div class="block" id="defineproperties">
-                <div class="block_title">
-                    <h2>Object.defineproperties()</h2>
-                    <small>这个是上面defineproperty的简化方法，且可以一次定义多个属性</small>
-                </div>
-                <div class="block_content">
-                    <div class="tip">
-                        <p class="title">语法</p>
-                        <p class="use">Object.defineproperties(obj, {.....property})</p>
-                        <p>obj: 一个已定义的目标对象（未定义的对象会导致报错）</p>
-                        <p>property: 属性及其描述符（可多个）</p>
-                    </div>
-                    <p class="block_intro">有了上面的例子相信这个应该不难理解看，所以我们只要知道基本用法就行了</p>
-                    <div class="codearea">
-                        <pre class="code">
-                            Object.defineProperties(window, {
-                                "temp": {
-                                    configurable: true,
-                                    enumerable: true,
-                                    set: function (value) {
-                                        window.a = value;
-                                    }
-                                },
-                                "temp1": {
-                                    configurable: true,
-                                    enumerable: true,
-                                    set: function (value) {
-                                        window.temp = value;
-                                    }
-                                }
-                            });
-                            temp = 2;
-                            console.log(window.a);
-                            temp1 = 3;
-                            console.log(window.a);
-                        </pre>
-                        <div class="run btn">run</div>
-                    </div>
-                    <p class="block_intro">由于这个方法是由上面那个衍生出来的，所以浏览器的兼容性大同小异。</p>
-                    <div class="browsersupport">
-                        <h3>浏览器兼容性</h3>
-                        <table class="browsersupport_table">
-                            <tbody>
-                                <tr>
-                                    <th>Chrome</th>
-                                    <th>Firefox</th>
-                                    <th>IE</th>
-                                    <th>Opera</th>
-                                    <th>Safari</th>
-                                </tr>
-                                <tr class="browsersupport_icons">
-                                    <td><span class="icon icon_browser icon_browser-bschrome"></span></td>
-                                    <td><span class="icon icon_browser icon_browser-bsfirefox"></span></td>
-                                    <td><span class="icon icon_browser icon_browser-bsie"></span></td>
-                                    <td><span class="icon icon_browser icon_browser-bsopera"></span></td>
-                                    <td><span class="icon icon_browser icon_browser-bssafari"></span></td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>4.0</td>
-                                    <td>9</td>
-                                    <td>11.60</td>
-                                    <td>5.1</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
         </div> 
-        <div class="inputarea">
-            <div class="console">
-                <p class="console_title">- 假装这是一个控制台 -</p>
-                <pre class="console_content"></pre>
-                <div class="clear btn" onclick="Code.clear()">clear</div>
-            </div>
-
-            <pre class="content" contenteditable="true"></pre>
-            <div class="run btn">run</div>
-        </div>
     </div>
     <script type="text/javascript" src="../js/util.js"></script>
     <script type="text/javascript" src="../js/cursor.js"></script>
