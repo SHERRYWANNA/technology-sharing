@@ -4,7 +4,7 @@ var Code = {
     $console: query('.console_content')[0],
     run: function(el) {
         var _content = util.removeTag(el.innerHTML);
-        _content = this.translateContent(_content.replace(/console\.log\((.+?)\);/g, 'Code.outputFormate("$1=");Code.outputFormate($1);'));
+        _content = util.translateHTMLContent(_content.replace(/console\.log\((.+?)\);/g, 'Code.outputFormate("$1=");Code.outputFormate($1);'));
 
         this.$console.innerHTML = "";
         this.$body.removeChild(query('.myscript')[0]);
@@ -24,14 +24,14 @@ var Code = {
         if (typeof w === 'number') {
             w = w.toString();
         }
-        _this.$console.innerHTML += _this.formate(objectFormat(w)) + '\n';
+        _this.$console.innerHTML += util.codeFormat(objectFormat(w)) + '\n';
         function objectFormat(e) {
             var _output = '';
-            if (_this.isObject(e)) {
+            if (util.isObject(e)) {
                 _output += '{';
                 var totalKey = Object.keys(e).length;
                 for (var i in e) {
-                    if (_this.isObject(e[i]) || _this.isArray(e[i])) {
+                    if (util.isObject(e[i]) || util.isArray(e[i])) {
                         _output += i + ': ' + objectFormat(e[i]);
                     } else {
                         _output += i + ': ' + e[i];
@@ -42,7 +42,7 @@ var Code = {
                         _output += '}';
                     }
                 }
-            } else if (_this.isArray(e)) {
+            } else if (util.isArray(e)) {
                 _output += '[' + e.join(' ') + ']';
             } else {
                 _output = e; 
@@ -52,129 +52,10 @@ var Code = {
     },
     codeAreaFormate: function() {
         addEvent(this.$codeArea, function(el) {
-            el.innerHTML = Code.formate(el.innerHTML);
+            el.innerHTML = util.codeFormat(el.innerHTML);
         });
-    },
-    isObject: function(e) {
-        return (typeof e === 'object' && e.constructor === Object);
-    },
-    isArray: function(e) {
-        return (typeof e === 'object' && e.constructor === Array);
-    },
-    translateContent: function(e) {
-        return e.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-    },
-    formate: function(e) {
-        if (typeof e === 'string') {
-            e = this.translateContent(e.replace(/(  |\n)/g, ''));
-        }
-        var _tab = 0;
-        var _trueContent = '';
-        var _brackets = [];
-
-        for (var i = 0; i < e.length; i++) {
-            var _addContent = '',
-                _lastBrackets = _brackets[_brackets.length-1],
-                _inFun = _lastBrackets != '(' ? false : true,
-                _inArray = _lastBrackets == '[' ? true : false;
-
-            switch (e[i]) {
-                case '{':
-                    _tab++;
-                    _brackets.push(e[i]);
-                    _addContent += e[i];
-                    if (e[i+1] && e[i+1] != '}') {
-                        _addContent +=  '\n' + this.addTab(_tab);
-                    }
-                    break;
-                case '}':
-                    _tab--;
-                    removeRecentBracket(e[i]);
-                    if (e[i-1] && e[i-1] != ';' && e[i-1] != '{') {
-                        _addContent += '\n' + this.addTab(_tab);
-                    }
-                    _addContent += e[i];
-                    // 当大括号后面跟的是else时 不换行
-                    if (e[i+5] && e[i+2] == 'e' && e.substr(i+2, 4) == 'else') {
-                        _addContent += ' ';
-                    // 当大括号后面跟的是非结束标点时 换行
-                    } else if (e[i+1] && !isEndCharacter(e[i+1])) {
-                        _addContent += '\n' + this.addTab(_tab);
-                    }
-                    break;
-                case ';':
-                    _addContent += e[i];
-                    if (e[i+1] && !_inFun) {
-                        _addContent += '\n';
-                        if (!isEndCharacter(e[i+1])) {
-                            _addContent += this.addTab(_tab);
-                        } else {
-                            _addContent += this.addTab(_tab-1);
-                        }
-                    }
-                    break;
-                case ',':
-                    _addContent += e[i];
-                    if (_inArray) {
-                        _addContent += ' ';
-                    } else if (!_inFun) {
-                        _addContent += '\n' + this.addTab(_tab);
-                    }
-                    break;
-                case '[':
-                    _addContent += e[i];
-                    _brackets.push(e[i]);
-                    break;
-                case ']':
-                    _addContent += e[i];
-                    removeRecentBracket(e[i]);
-                    break;
-                case '(': 
-                    _addContent += e[i];
-                    _brackets.push(e[i]);
-                    break;
-                case ')':
-                    _addContent += e[i];
-                    removeRecentBracket(e[i]);
-                    break;
-                default:
-                    _addContent += e[i];
-                    break;
-
-            }
-            _trueContent +=  _addContent;
-        }
-
-        return _trueContent;
-
-        function isEndCharacter(e) {
-            var endCharacter = ['}', ']', ';', ',', ')'];
-            return util.isInArray(e, endCharacter);
-        }
-        // 移除最近相匹配括号
-        function removeRecentBracket(char) {
-            if (char == '}') {
-                char = '{';
-            } else if (char == ')') {
-                char = '(';
-            } else if (char == ']') {
-                char = '[';
-            }
-            for (var i = _brackets.length-1; i >= 0; i--) {
-                if (_brackets[i] == char) {
-                    _brackets.splice(i,1);
-                    return;
-                }
-            }
-        }
-    },
-    addTab: function(tab) {
-        var _space = '';
-        for (var i = tab - 1; i >= 0; i--) {
-            _space += '    ';
-        }
-        return _space;
     }
+    
 };
 
 var ConsolePast = {
