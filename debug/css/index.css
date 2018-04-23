@@ -57,8 +57,9 @@ p {
     left: 0;
     top: 0;
     border-right: 1px solid #3e5161;
-    background: url(../images/bg.png) no-repeat;
-    background-size: 100% 100%;
+    background: url(../images/bg.jpg) no-repeat;
+    background-size: cover;
+    background-position: right top;
     padding-bottom: 140px;
     overflow: hidden;
 }
@@ -68,12 +69,12 @@ p {
     line-height: 3em;
     color: #fff;
     padding-left: 1em;
-    border-bottom: 1px solid #738492;
+    border-bottom: 1px solid #fff;
     width: 100%;
 }
 
 .nav a:hover, .nav a.active {
-    background-color: #2a3742;
+    background-color: rgba(42, 55, 66, .5);
 }
 
 .run, .clear {
@@ -336,7 +337,7 @@ code, pre {
 .icon_browser {
     width: 48px;
     height: 48px;
-    background-image: url('../images/browser.png');
+    background-image: url('../../resource/images/browser.png');
 }
 
 .icon_browser-bschrome {
