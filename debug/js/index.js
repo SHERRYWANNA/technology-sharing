@@ -5,7 +5,7 @@ var Code = {
     run: function(el) {
         console.clear();
 
-        var _content = util.removeTag(el.innerHTML);
+        var _content = util.translateHTMLContent(util.removeTag(el.innerHTML));
         this.$body.removeChild(query('.myscript')[0]);
 
         var _myScript = document.createElement('script');

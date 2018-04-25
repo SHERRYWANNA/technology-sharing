@@ -69,12 +69,14 @@ p {
     line-height: 3em;
     color: #fff;
     padding-left: 1em;
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, .8);
     width: 100%;
+    opacity: .8;
 }
 
 .nav a:hover, .nav a.active {
-    background-color: rgba(42, 55, 66, .5);
+    background-color: rgba(42, 55, 66, .6);
+    opacity: 1;
 }
 
 .run, .clear {
@@ -390,4 +392,13 @@ code, pre {
 }
 .icon_browser_s-bssafari {
     background-position: -352px -20px;
+}
+
+@media only screen and (max-width: 780px) {
+    .nav, .inputarea {
+        display: none;
+    }
+    .main {
+        margin: 0;
+    }
 }

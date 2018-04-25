@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>technology-sharing_debug</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=no">
     <link rel="shortcut icon" href="../../resource/favicon/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="../../resource/css/init.css">
     <link rel="stylesheet" type="text/css" href="../css/index.css">
@@ -19,6 +20,7 @@
                 <li><a href="#dollar_">$_</a></li>
                 <li><a href="#dollar_index">$0-$4</a></li>
                 <li><a href="#geteventlisteners">getEventListeners()</a></li>
+                <li><a href="#debugger">debugger</a></li>
             </ul>
         </div>
         <div class="main">
@@ -219,7 +221,23 @@
                 </div>
             </div>
 
-
+            <div class="block" id="debugger">
+                <div class="block_title">
+                    <h2>debugger</h2>
+                    <small>必须与浏览器的调试工具配合使用, 功能和在f12中的source界面打断点相同。</small>
+                </div>
+                <div class="block_content">
+                    <p class="block_intro">虽然功能是一样的，但是source的界面肯定还是没有专门的IDE友好，所以会比直接去source中打断点更直观方便点。<br>
+                    <div class="codearea">
+                        <pre class="code">
+                            for (var i = 0; i < 2; i++) {
+                                if (i == 1) debugger;
+                            }
+                        </pre>
+                        <div class="run btn">run</div>
+                    </div>
+                </div>
+            </div>
         </div> 
     </div>
     <script type="text/javascript" src="../../resource/js/util.js"></script>
