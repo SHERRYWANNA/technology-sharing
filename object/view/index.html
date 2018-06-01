@@ -19,6 +19,7 @@
                 <li><a href="#copy">深拷贝与浅拷贝</a></li>
                 <li><a href="#defineproperty">Object.defineProperty()</a></li>
                 <li><a href="#defineproperties">Object.defineProperties()</a></li>
+                <li><a href="#getownpropertydescriptor">Object.getOwnPropertyDescriptor()</a></li>
             </ul>
         </div>
         <div class="main">
@@ -512,6 +513,60 @@
                     </div>
                 </div>
             </div>
+
+
+
+
+            <div class="block" id="getownpropertydescriptor">
+                <div class="block_title">
+                    <h2>Object.getOwnPropertyDescriptor()</h2>
+                    <small>返回指定对象上一个自有属性对应的属性描述符(object)。</small>
+                </div>
+                <div class="block_content">
+                    <div class="tip">
+                        <p class="title">语法</p>
+                        <p class="use">Object.getOwnPropertyDescriptor(obj, property)</p>
+                        <p>obj: 一个已定义的目标对象</p>
+                        <p>property: 目标对象内属性名称</p>
+                    </div>
+                    <p class="block_intro">上面都是介绍修改，而这里是查看一个对象属性的描述符。</p>
+                    <div class="codearea">
+                        <pre class="code">
+                            var a = Object.getOwnPropertyDescriptor(location, 'search');
+                            console.log(window.a);
+                        </pre>
+                        <div class="run btn">run</div>
+                    </div>
+                    <div class="browsersupport">
+                        <h3>浏览器兼容性</h3>
+                        <table class="browsersupport_table">
+                            <tbody>
+                                <tr>
+                                    <th>Chrome</th>
+                                    <th>Firefox</th>
+                                    <th>IE</th>
+                                    <th>Opera</th>
+                                    <th>Safari</th>
+                                </tr>
+                                <tr class="browsersupport_icons">
+                                    <td><span class="icon icon_browser icon_browser-bschrome"></span></td>
+                                    <td><span class="icon icon_browser icon_browser-bsfirefox"></span></td>
+                                    <td><span class="icon icon_browser icon_browser-bsie"></span></td>
+                                    <td><span class="icon icon_browser icon_browser-bsopera"></span></td>
+                                    <td><span class="icon icon_browser icon_browser-bssafari"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>4.0</td>
+                                    <td>9</td>
+                                    <td>11.60</td>
+                                    <td>5.1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div> 
         <div class="inputarea">
             <div class="console">
@@ -530,14 +585,3 @@
     <script type="text/javascript" class="myscript"></script>
 </body>
 </html>
-
-<!-- var a = {
-    a:1,
-     b:2,
-     c:[2, 3]
-};
-var b = Object.assign({},a);
-console.log(b);
-b.c[2] = 4;
-console.log(b);
-console.log(a); -->
