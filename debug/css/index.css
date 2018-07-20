@@ -50,6 +50,18 @@ p {
     background-position: center;
 }
 
+.nav_bg {
+    background: url(../images/bg.jpg) no-repeat right top;
+    background-size: cover;
+    -webkit-filter: blur(3px) brightness(40%);
+    filter: blur(3px) brightness(40%);
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
 .nav {
     width: 20%;
     height: 100%;
@@ -57,15 +69,18 @@ p {
     left: 0;
     top: 0;
     border-right: 1px solid #3e5161;
-    background: url(../images/bg.jpg) no-repeat;
-    background-size: cover;
-    background-position: right top;
     padding-bottom: 140px;
     overflow: hidden;
+    background-color: #1a2f44;
+}
+.nav li {
+    position: relative;
+    z-index: 2;
 }
 .nav li a{
     display: block;
     font-size: 14px;
+    font-weight: bolder;
     line-height: 3em;
     color: #fff;
     padding-left: 1em;
@@ -75,7 +90,7 @@ p {
 }
 
 .nav a:hover, .nav a.active {
-    background-color: rgba(42, 55, 66, .6);
+    background-color: rgba(13, 4, 31, .8);
     opacity: 1;
 }
 

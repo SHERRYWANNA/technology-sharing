@@ -3,7 +3,9 @@ var Code = {
     $body: document.body,
     $console: query('.console_content')[0],
     run: function(el) {
-        console.clear();
+        if ('0' !== el.getAttribute('data-clear')) {
+            console.clear();
+        }
 
         var _content = util.translateHTMLContent(util.removeTag(el.innerHTML));
         this.$body.removeChild(query('.myscript')[0]);

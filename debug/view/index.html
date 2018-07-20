@@ -11,11 +11,14 @@
 <body>
     <div class="container">
         <div class="nav">
+            <div class="nav_bg"></div>
             <ul>
                 <li><a href="#preface" class="active">preface</a></li>
                 <li><a href="#console">console</a></li>
                 <li><a href="#console_error">console.error()</a></li>
+                <li><a href="#console_count">console.count()</a></li>
                 <li><a href="#console_table">console.table()</a></li>
+                <li><a href="#ua">navigator.userAgent</a></li>
                 <li><a href="#dollar">$</a></li>
                 <li><a href="#dollar_">$_</a></li>
                 <li><a href="#dollar_index">$0-$4</a></li>
@@ -64,6 +67,33 @@
                             var test = {a: function() {console.error('wrong!!');}};
                             test.a();
                             console.warn('哟哟哟');
+                        </pre>
+                        <div class="run btn">run</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block" id="console_count">
+                <div class="block_title">
+                    <h2 class="g-mt20">console.count()</h2>
+                    <small>记录一个函数或则一段代码重复执行了多少次。</small>
+                </div>
+                <div class="block_content">
+                    <div class="tip">
+                        <p class="title">语法</p>
+                        <p class="use">console.error(string...)</p>
+                        <p>string: 输入的具有标志性的字符串，一般为函数名。</p>
+                    </div>
+                    <p class="block_intro">我们有时候为了看看函数是否重复执行了，而有意的去创建一个公用的计数变量来计算函数的运行次数，这里有个通用的方法我们何乐而不为呢。</p>
+                    <div class="codearea">
+                        <pre class="code">
+                            var test = {a: function() {console.count('test.a');}};
+                        </pre>
+                        <div class="run btn">run</div>
+                    </div>
+                    <div class="codearea">
+                        <pre class="code" data-clear="0">
+                            test.a();
                         </pre>
                         <div class="run btn">run</div>
                     </div>
@@ -149,6 +179,25 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            <div class="block" id="ua">
+                <div class="block_title">
+                    <h2 class="g-mt20">手机端模拟navigator.userAgent</h2>
+                    <small>在此只说明，chrome下如何模拟userAgent来观察不同ua中的页面展示情况。</small>
+                </div>
+                <div class="block_content">
+                    <div class="tip">
+                        <p class="title">方法</p>
+                        <p>在f12调试中<b class="f-bold">点击响应式界面</b class="f-bold">，在选择手机型号的位置点击<b class="f-bold">Edit</b class="f-bold">。</p>
+                        <p>点击<b class="f-bold">Add custom device...</b></p>
+                        <p>配置好自己的其他dpr，长宽像素后，在placeholder显示<b class="f-bold">User agent string</b>的输入框内输入你想要配置的ua。</p>
+                        <p><b class="f-bold">确认后</b>只需要选择自己配好的就可以了。</p>
+                    </div>
+                    <p class="block_intro">这里我们选择我们常用的手机炒股软件黑白版来模拟，这里判断的是ua中的hxtheme，当该字段为1时就判断为白版，否则显示为黑版。</p>
+                    <img src="../images/gif_ua.gif" class="block_img">
+                    <p class="block_intro">当然也不仅仅是局限在黑白版中，我们也可以调整平常也会用到的innerversion来测试我们的代码。</p>
                 </div>
             </div>
 
